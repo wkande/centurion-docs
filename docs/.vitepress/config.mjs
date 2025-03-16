@@ -4,6 +4,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: "Centurion Documentation",
   description: "A VitePress Site",
+  base: '/repo/',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
