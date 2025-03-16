@@ -1,8 +1,3 @@
-I looked at your .github/workflows/deploy.yml. It was probably adapted from the sample script on VitePress documentation. However, I think the sample script was wrong. If you specify multiple jobs (build and deploy), they will run on two independent runners. A runner is something like a container.
-You have .vitepress/dist in runner build, but you can't access it in runner deploy because they are two different containers.
-
-The solution is to combine the two jobs into one. I believe it will work.
-
 # Sample workflow for building and deploying a VitePress site to GitHub Pages
 #
 name: Deploy VitePress site to Pages
@@ -57,15 +52,15 @@ jobs:
         with:
           path: .vitepress/dist
 
-  # # Deployment job
-  # deploy:
-  #   environment:
-  #     name: github-pages
-  #     url: ${{ steps.deployment.outputs.page_url }}
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   name: Deploy
-  #   steps:
+      # # Deployment job
+      # deploy:
+      #   environment:
+      #     name: github-pages
+      #     url: ${{ steps.deployment.outputs.page_url }}
+      #   needs: build
+      #   runs-on: ubuntu-latest
+      #   name: Deploy
+      #   steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
