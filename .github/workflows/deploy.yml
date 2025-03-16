@@ -10,7 +10,7 @@ jobs:
       - name: Deploy to foo-bar.surge.sh
         uses: dswistowski/surge-sh-action@v1
         with:
-          domain: "centurion-foo.surge.sh"
+          domain: "centurion.surge.sh"
           project: "."
           login: warren@api3.org
           token: a282859fea6df0d8e18a1060bcc26385
