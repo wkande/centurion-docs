@@ -1,3 +1,8 @@
+I looked at your .github/workflows/deploy.yml. It was probably adapted from the sample script on VitePress documentation. However, I think the sample script was wrong. If you specify multiple jobs (build and deploy), they will run on two independent runners. A runner is something like a container.
+You have .vitepress/dist in runner build, but you can't access it in runner deploy because they are two different containers.
+
+The solution is to combine the two jobs into one. I believe it will work.
+
 # Sample workflow for building and deploying a VitePress site to GitHub Pages
 #
 name: Deploy VitePress site to Pages
@@ -29,38 +34,38 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0 # Not needed if lastUpdated is not enabled
-      # - uses: pnpm/action-setup@v3 # Uncomment this block if you're using pnpm
-      #   with:
-      #     version: 9 # Not needed if you've set "packageManager" in package.json
+      # - uses: pnpm/action-setup@v2 # Uncomment this if you're using pnpm
       # - uses: oven-sh/setup-bun@v1 # Uncomment this if you're using Bun
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
-          node-version: 20
-          cache: npm # or pnpm / yarn
+          node-version: 18
+          cache: yarn # or pnpm / yarn
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v3
       - name: Install dependencies
-        run: npm ci # or pnpm install / yarn install / bun install
+        run: yarn install # or pnpm install / yarn install / bun install
       - name: Build with VitePress
-        run: npm run docs:build # or pnpm docs:build / yarn docs:build / bun run docs:build
+        run: |
+          yarn vitepress build # or pnpm docs:build / yarn docs:build / bun run docs:build
+          touch .vitepress/dist/.nojekyll
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v2
         with:
-          path: docs/.vitepress/dist
+          path: .vitepress/dist
 
-  # Deployment job
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    needs: build
-    runs-on: ubuntu-latest
-    name: Deploy
-    steps:
+  # # Deployment job
+  # deploy:
+  #   environment:
+  #     name: github-pages
+  #     url: ${{ steps.deployment.outputs.page_url }}
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   name: Deploy
+  #   steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v2
